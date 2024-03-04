@@ -140,6 +140,9 @@ min_date = df_day['dateday'].min()
 max_date = df_day['dateday'].max()
  
 with st.sidebar:
+
+    st.header('Rental Sepeda Berkah')
+
     start_date, end_date = st.date_input(
         label='Rentang Waktu',
         min_value= min_date,
@@ -147,8 +150,7 @@ with st.sidebar:
         value=[min_date, max_date]
     )
 
-main_df = df_day[(df_day['dateday'] >= str(start_date)) & 
-                (df_day['dateday'] <= str(end_date))]
+main_df = df_day[(df_day['dateday'] >= str(start_date)) & (df_day['dateday'] <= str(end_date))]
 
 # dataframe
 daily_rent_df = create_daily_rent_df(main_df)
@@ -162,7 +164,7 @@ holiday_rent_df = create_holiday_rent_df(main_df)
 weather_rent_df = create_weather_rent_df(main_df)
 
 # judul
-st.header('Bike Rental Dashboard')
+st.header('Rental Sepeda Berkah')
 
 # harian
 st.subheader('Rental Harian')
@@ -198,6 +200,30 @@ ax.tick_params(axis='x', labelsize=25, rotation=45)
 ax.tick_params(axis='y', labelsize=20)
 st.pyplot(fig)
 
+#Cuaca
+st.subheader('Penyewaan Berdasarkan Cuaca')
+
+fig, ax = plt.subplots(figsize=(16, 8))
+
+colors=["tab:blue", "tab:orange", "tab:green"]
+
+sns.barplot(
+    x=weather_rent_df.index,
+    y=weather_rent_df['count'],
+    palette=colors,
+    ax=ax
+)
+
+for index, row in enumerate(weather_rent_df['count']):
+    ax.text(index, row + 1, str(row), ha='center', va='bottom', fontsize=12)
+
+ax.set_xlabel(None)
+ax.set_ylabel(None)
+ax.tick_params(axis='x', labelsize=20)
+ax.tick_params(axis='y', labelsize=15)
+st.pyplot(fig)
+
+#musim
 st.subheader('Penyewaan Berdasarkan Musim')
 
 fig, ax = plt.subplots(figsize=(16, 8))
@@ -231,25 +257,3 @@ ax.tick_params(axis='y', labelsize=15)
 ax.legend()
 st.pyplot(fig)
 
-#Cuaca
-st.subheader('Penyewaan Berdasarkan Cuaca')
-
-fig, ax = plt.subplots(figsize=(16, 8))
-
-colors=["tab:blue", "tab:orange", "tab:green"]
-
-sns.barplot(
-    x=weather_rent_df.index,
-    y=weather_rent_df['count'],
-    palette=colors,
-    ax=ax
-)
-
-for index, row in enumerate(weather_rent_df['count']):
-    ax.text(index, row + 1, str(row), ha='center', va='bottom', fontsize=12)
-
-ax.set_xlabel(None)
-ax.set_ylabel(None)
-ax.tick_params(axis='x', labelsize=20)
-ax.tick_params(axis='y', labelsize=15)
-st.pyplot(fig)
