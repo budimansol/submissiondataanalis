@@ -224,36 +224,19 @@ ax.tick_params(axis='y', labelsize=15)
 st.pyplot(fig)
 
 #musim
-st.subheader('Penyewaan Berdasarkan Musim')
+#musim
+st.subheader('Persentase Penyewaan Berdasarkan Musim')
 
 fig, ax = plt.subplots(figsize=(16, 8))
 
-sns.barplot(
-    x='season',
-    y='registered',
-    data=season_rent_df,
-    label='Registered',
-    color='tab:blue',
-    ax=ax
-)
+# Gabungkan 'casual' dan 'registered'
+season_rent_df['total'] = season_rent_df['casual'] + season_rent_df['registered']
 
-sns.barplot(
-    x='season',
-    y='casual',
-    data=season_rent_df,
-    label='Casual',
-    color='tab:orange',
-    ax=ax
-)
+# Buat pie chart
+sizes = season_rent_df['total']
+labels = season_rent_df['season']
 
-for index, row in season_rent_df.iterrows():
-    ax.text(index, row['registered'], str(row['registered']), ha='center', va='bottom', fontsize=12)
-    ax.text(index, row['casual'], str(row['casual']), ha='center', va='bottom', fontsize=12)
+ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=['tab:blue', 'tab:orange', 'tab:green', 'tab:red'], labeldistance=1.05)
 
-ax.set_xlabel(None)
-ax.set_ylabel(None)
-ax.tick_params(axis='x', labelsize=20, rotation=0)
-ax.tick_params(axis='y', labelsize=15)
-ax.legend()
 st.pyplot(fig)
 
